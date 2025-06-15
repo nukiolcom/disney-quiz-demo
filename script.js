@@ -110,12 +110,18 @@ const questionContainer = document.getElementById('question-container');
 const answerButtons = document.getElementById('answer-buttons');
 const nextBtn = document.getElementById('next-btn');
 const result = document.getElementById('result');
+const scoreTracker = document.createElement("div");
+scoreTracker.id = "score-tracker";
+scoreTracker.style.margin = "10px 0";
+scoreTracker.style.fontWeight = "bold";
+document.querySelector(".quiz-container").insertBefore(scoreTracker, questionContainer);
 
 function showQuestion() {
     const question = questions[currentQuestionIndex];
     questionContainer.innerText = `Q${currentQuestionIndex + 1} / ${questions.length}: ${question.question}`;
     answerButtons.innerHTML = "";
     result.innerText = "";
+updateScore();
 
     question.answers.forEach((answer, index) => {
         const button = document.createElement('button');
@@ -129,9 +135,14 @@ function showQuestion() {
     });
 }
 
+function updateScore() {
+    scoreTracker.innerText = `正解数：${score} 問`;
+}
+
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
+        updateScore();
         shuffleQuestions();
 showQuestion();
     } else {
