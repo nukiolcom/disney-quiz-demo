@@ -113,7 +113,7 @@ const result = document.getElementById('result');
 
 function showQuestion() {
     const question = questions[currentQuestionIndex];
-    questionContainer.innerText = question.question;
+    questionContainer.innerText = `Q${currentQuestionIndex + 1} / ${questions.length}: ${question.question}`;
     answerButtons.innerHTML = "";
     result.innerText = "";
 
