@@ -29,6 +29,7 @@ const questions = [
 
 let currentQuestionIndex = 0;
 let score = 0;
+let userAnswers = [];
 
 const questionContainer = document.getElementById('question-container');
 const answerButtons = document.getElementById('answer-buttons');
@@ -39,37 +40,50 @@ function showQuestion() {
     const question = questions[currentQuestionIndex];
     questionContainer.innerText = question.question;
     answerButtons.innerHTML = "";
+    result.innerText = "";
 
     question.answers.forEach((answer, index) => {
         const button = document.createElement('button');
         button.innerText = answer;
-        button.addEventListener('click', () => selectAnswer(index));
+        button.classList.add("answer-btn");
+        button.addEventListener('click', () => {
+            userAnswers.push(index);
+            nextQuestion();
+        });
         answerButtons.appendChild(button);
     });
 }
 
-function selectAnswer(index) {
-    const correct = questions[currentQuestionIndex].correct;
-    if (index === correct) {
-        score++;
-    }
-    nextBtn.style.display = "block";
-}
-
-nextBtn.addEventListener('click', () => {
+function nextQuestion() {
     currentQuestionIndex++;
-    nextBtn.style.display = "none";
     if (currentQuestionIndex < questions.length) {
         showQuestion();
     } else {
         showResult();
     }
-});
+}
 
 function showResult() {
     questionContainer.innerText = "";
     answerButtons.innerHTML = "";
-    result.innerText = `正解数：${score} / ${questions.length}`;
+    result.innerHTML = `<h2>結果</h2>`;
+    let summary = "";
+    questions.forEach((q, i) => {
+        const userAnswer = userAnswers[i];
+        const isCorrect = userAnswer === q.correct;
+        if (isCorrect) score++;
+        summary += `
+            <div style="margin-bottom: 10px;">
+                <strong>Q${i + 1}: ${q.question}</strong><br>
+                あなたの答え：${q.answers[userAnswer] || "未回答"}<br>
+                正解：${q.answers[q.correct]}<br>
+                <span style="color: ${isCorrect ? 'green' : 'red'};">${isCorrect ? "◎ 正解" : "× 不正解"}</span>
+            </div>
+        `;
+    });
+
+    summary += `<p><strong>正解数：${score} / ${questions.length}</strong></p>`;
+    result.innerHTML += summary;
 }
 
 showQuestion();
