@@ -1,5 +1,5 @@
 
-const questions = [
+let questions = [
     {
         question: "ミッキーマウスの恋人は？",
         answers: ["ミニー", "デイジー", "クラリス", "アリエル"],
@@ -23,6 +23,81 @@ const questions = [
     {
         question: "アラジンのペットの猿の名前は？",
         answers: ["アブー", "ラジャー", "ジーニー", "サルタン"],
+        correct: 0
+    },
+    {
+        question: "シンデレラのガラスの靴を届けたのは誰？",
+        answers: ["王子", "ネズミたち", "魔法使い", "王家の使者"],
+        correct: 3
+    },
+    {
+        question: "『リトル・マーメイド』の主人公の名前は？",
+        answers: ["アリエル", "ベル", "エルサ", "ジャスミン"],
+        correct: 0
+    },
+    {
+        question: "『トイ・ストーリー』のカウボーイの名前は？",
+        answers: ["ウッディ", "バズ", "ジェシー", "レックス"],
+        correct: 0
+    },
+    {
+        question: "ミッキーの犬の名前は？",
+        answers: ["グーフィー", "プルート", "マックス", "チップ"],
+        correct: 1
+    },
+    {
+        question: "美女と野獣の主人公の名前は？",
+        answers: ["ベル", "ジャスミン", "アナ", "オーロラ"],
+        correct: 0
+    },
+    {
+        question: "『ズートピア』のうさぎの警察官の名前は？",
+        answers: ["ジュディ", "ニック", "クロウハウザー", "ボゴ"],
+        correct: 0
+    },
+    {
+        question: "『モアナ』で海を渡る主人公の名前は？",
+        answers: ["モアナ", "マウイ", "テ・フィティ", "タマトア"],
+        correct: 0
+    },
+    {
+        question: "『ライオン・キング』の主人公は？",
+        answers: ["シンバ", "ムファサ", "スカー", "ナラ"],
+        correct: 0
+    },
+    {
+        question: "『塔の上のラプンツェル』のヒロインの特徴は？",
+        answers: ["長い髪", "翼", "透明になる", "氷を操る"],
+        correct: 0
+    },
+    {
+        question: "『ベイマックス』はどんなキャラ？",
+        answers: ["ケアロボット", "犬", "車", "ぬいぐるみ"],
+        correct: 0
+    },
+    {
+        question: "ミッキーの仲間で、口笛を吹くアヒルは？",
+        answers: ["ドナルド", "デイジー", "グーフィー", "プルート"],
+        correct: 0
+    },
+    {
+        question: "『101匹わんちゃん』に登場する犬種は？",
+        answers: ["ダルメシアン", "チワワ", "柴犬", "ラブラドール"],
+        correct: 0
+    },
+    {
+        question: "『リメンバー・ミー』のテーマは？",
+        answers: ["死者の日", "海の冒険", "お菓子作り", "未来の世界"],
+        correct: 0
+    },
+    {
+        question: "『シュガー・ラッシュ』でゲームの世界を旅するのは？",
+        answers: ["ラルフ", "ヴァネロペ", "ソニック", "ピーチ姫"],
+        correct: 0
+    },
+    {
+        question: "『カーズ』の主人公の車の名前は？",
+        answers: ["ライトニング・マックィーン", "メーター", "サリー", "ルイジ"],
         correct: 0
     }
 ];
@@ -57,7 +132,8 @@ function showQuestion() {
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex < questions.length) {
-        showQuestion();
+        shuffleQuestions();
+showQuestion();
     } else {
         showResult();
     }
@@ -86,4 +162,10 @@ function showResult() {
     result.innerHTML += summary;
 }
 
+shuffleQuestions();
 showQuestion();
+
+
+function shuffleQuestions() {
+    questions = questions.sort(() => Math.random() - 0.5);
+}
