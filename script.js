@@ -1,75 +1,87 @@
 
-const questions = [
-    {
-        question: "ミッキーマウスの恋人は？",
-        answers: ["ミニー", "デイジー", "クラリス", "アリエル"],
-        correct: 0
-    },
-    {
-        question: "アナと雪の女王の主人公は？",
-        answers: ["エルサ", "アナ", "ラプンツェル", "モアナ"],
-        correct: 1
-    },
-    {
-        question: "ディズニーランドが最初に開園した国は？",
-        answers: ["アメリカ", "日本", "フランス", "中国"],
-        correct: 0
-    },
-    {
-        question: "プーさんの親友の名前は？",
-        answers: ["ピグレット", "ティガー", "イーヨー", "ラビット"],
-        correct: 0
-    },
-    {
-        question: "アラジンのペットの猿の名前は？",
-        answers: ["アブー", "ラジャー", "ジーニー", "サルタン"],
-        correct: 0
-    }
-];
-
+let allQuestions = {};
+let questions = [];
 let currentQuestionIndex = 0;
 let score = 0;
+let userAnswers = [];
 
-const questionContainer = document.getElementById('question-container');
-const answerButtons = document.getElementById('answer-buttons');
-const nextBtn = document.getElementById('next-btn');
-const result = document.getElementById('result');
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const questionContainer = document.getElementById("question-container");
+const answerButtons = document.getElementById("answer-buttons");
+const nextBtn = document.getElementById("next-btn");
+const result = document.getElementById("result");
+
+fetch("disney_quiz_3levels.json")
+  .then((res) => res.json())
+  .then((data) => {
+    allQuestions = data;
+  });
+
+function startQuiz(level) {
+  questions = shuffle([...allQuestions[level]]);
+  currentQuestionIndex = 0;
+  score = 0;
+  userAnswers = [];
+
+  startScreen.style.display = "none";
+  quizScreen.style.display = "block";
+  showQuestion();
+}
 
 function showQuestion() {
-    const question = questions[currentQuestionIndex];
-    questionContainer.innerText = question.question;
-    answerButtons.innerHTML = "";
+  const question = questions[currentQuestionIndex];
+  questionContainer.innerText = `Q${currentQuestionIndex + 1} / ${questions.length}: ${question.question}`;
+  answerButtons.innerHTML = "";
+  result.innerText = "";
 
-    question.answers.forEach((answer, index) => {
-        const button = document.createElement('button');
-        button.innerText = answer;
-        button.addEventListener('click', () => selectAnswer(index));
-        answerButtons.appendChild(button);
+  question.answers.forEach((answer, index) => {
+    const button = document.createElement("button");
+    button.innerText = answer;
+    button.classList.add("answer-btn");
+    button.addEventListener("click", () => {
+      userAnswers.push(index);
+      nextQuestion();
     });
+    answerButtons.appendChild(button);
+  });
 }
 
-function selectAnswer(index) {
-    const correct = questions[currentQuestionIndex].correct;
-    if (index === correct) {
-        score++;
-    }
-    nextBtn.style.display = "block";
-}
-
-nextBtn.addEventListener('click', () => {
-    currentQuestionIndex++;
-    nextBtn.style.display = "none";
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-    } else {
-        showResult();
-    }
+nextBtn.addEventListener("click", () => {
+  nextQuestion();
 });
 
-function showResult() {
-    questionContainer.innerText = "";
-    answerButtons.innerHTML = "";
-    result.innerText = `正解数：${score} / ${questions.length}`;
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
 }
 
-showQuestion();
+function showResult() {
+  questionContainer.innerText = "";
+  answerButtons.innerHTML = "";
+  result.innerHTML = `<h2>結果</h2>`;
+  let summary = "";
+  questions.forEach((q, i) => {
+    const userAnswer = userAnswers[i];
+    const isCorrect = userAnswer === q.correct;
+    if (isCorrect) score++;
+    summary += `
+      <div style="margin-bottom: 10px;">
+        <strong>Q${i + 1}: ${q.question}</strong><br>
+        あなたの答え：${q.answers[userAnswer] || "未回答"}<br>
+        正解：${q.answers[q.correct]}<br>
+        <span style="color: ${isCorrect ? 'green' : 'red'};">${isCorrect ? "◎ 正解" : "× 不正解"}</span>
+      </div>
+    `;
+  });
+  summary += `<p><strong>正解数：${score} / ${questions.length}</strong></p>`;
+  result.innerHTML += summary;
+}
+
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}

@@ -2,19 +2,28 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ディズニークイズ</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ディズニークイズ</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>ディズニークイズ</h1>
-        <div id="question-container"></div>
-        <div id="answer-buttons" class="btn-container"></div>
-        <button id="next-btn" class="next-btn">次の問題</button>
-        <div id="result" class="result"></div>
+  <div class="quiz-container">
+    <div id="start-screen">
+      <h1>ディズニークイズ</h1>
+      <p>難易度を選んでスタート！</p>
+      <button onclick="startQuiz('easy')">初級</button>
+      <button onclick="startQuiz('medium')">中級</button>
+      <button onclick="startQuiz('hard')">上級</button>
     </div>
-    <script src="script.js"></script>
+
+    <div id="quiz-screen" style="display:none;">
+      <div id="question-container"></div>
+      <div id="answer-buttons" class="btn-container"></div>
+      <button id="next-btn" class="next-btn">次の問題</button>
+      <div id="result" class="result"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
