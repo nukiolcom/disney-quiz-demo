@@ -33,32 +33,56 @@ function showQuestion() {
   const question = questions[currentQuestionIndex];
   questionContainer.innerText = `Q${currentQuestionIndex + 1} / ${questions.length}: ${question.question}`;
   answerButtons.innerHTML = "";
-  result.innerText = "";
+  result.innerHTML = "";
 
   question.answers.forEach((answer, index) => {
     const button = document.createElement("button");
     button.innerText = answer;
     button.classList.add("answer-btn");
-    button.addEventListener("click", () => {
-      userAnswers.push(index);
-      nextQuestion();
-    });
+    button.disabled = false;
+    button.addEventListener("click", () => handleAnswer(index, button));
     answerButtons.appendChild(button);
   });
+
+  nextBtn.style.display = "none";
+}
+
+function handleAnswer(selectedIndex, button) {
+  const current = questions[currentQuestionIndex];
+  const correctIndex = current.correct;
+
+  userAnswers.push(selectedIndex);
+
+  const buttons = document.querySelectorAll(".answer-btn");
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correctIndex) {
+      btn.style.backgroundColor = "#4CAF50"; // 正解 → 緑
+    } else if (i === selectedIndex) {
+      btn.style.backgroundColor = "#f44336"; // 不正解 → 赤
+    } else {
+      btn.style.backgroundColor = "#ddd";
+    }
+  });
+
+  const isCorrect = selectedIndex === correctIndex;
+  if (isCorrect) score++;
+
+  result.innerHTML = isCorrect
+    ? "<p style='color:green; font-size:24px;'>◯ 正解！</p>"
+    : `<p style='color:red; font-size:24px;'>× 不正解</p><p>正解：${current.answers[correctIndex]}</p>`;
+
+  nextBtn.style.display = "inline-block";
 }
 
 nextBtn.addEventListener("click", () => {
-  nextQuestion();
-});
-
-function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
     showQuestion();
   } else {
     showResult();
   }
-}
+});
 
 function showResult() {
   questionContainer.innerText = "";
@@ -68,13 +92,12 @@ function showResult() {
   questions.forEach((q, i) => {
     const userAnswer = userAnswers[i];
     const isCorrect = userAnswer === q.correct;
-    if (isCorrect) score++;
     summary += `
       <div style="margin-bottom: 10px;">
         <strong>Q${i + 1}: ${q.question}</strong><br>
         あなたの答え：${q.answers[userAnswer] || "未回答"}<br>
         正解：${q.answers[q.correct]}<br>
-        <span style="color: ${isCorrect ? 'green' : 'red'};">${isCorrect ? "◎ 正解" : "× 不正解"}</span>
+        <span style="color: ${isCorrect ? 'green' : 'red'};'>${isCorrect ? "◎ 正解" : "× 不正解"}</span>
       </div>
     `;
   });
