@@ -12,7 +12,7 @@ const answerButtons = document.getElementById("answer-buttons");
 const nextBtn = document.getElementById("next-btn");
 const result = document.getElementById("result");
 
-fetch("disney_quiz_3levels.json")
+fetch("disney_quiz_3levels_real.json")
   .then((res) => res.json())
   .then((data) => {
     allQuestions = data;
